@@ -95,7 +95,7 @@ docker run -it --rm -e DISPLAY=:0 -u $(id -u):$(id -g) -v /dev:/dev -v /tmp:/tmp
 
 ### Debugging
 
-- Since the demo is based on the - Since the demo is based on [lv_port_pc_vscode](), it's possible to debug it on VSCode before deploying the binary.
+- Since the demo is based on [lv_port_pc_vscode](), it's possible to debug it on VSCode before deploying the binary.
 
 ## Contribution and Support
 
