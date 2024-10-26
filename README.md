@@ -8,8 +8,6 @@ This guide provides steps to setup the Verdin imx8m Mini and run a cross-compile
 
 This guide is done with Verdin imx8m Mini Quad 2GB IT on Yavia carrier board.
 
-
-
 ## Buy
 
 You can purchase the Verdin i.MX8 from [Toradex website](https://www.toradex.com/computer-on-modules/verdin-arm-family/nxp-imx-8m-mini-nano). 
@@ -29,8 +27,6 @@ This is a SoM (System on Module) that can be tested with a carrier board. Torade
 - [Dahlia Carrier Board](https://developer.toradex.com/hardware/verdin-som-family/carrier-boards/dahlia-carrier-board/)
 - [Yavia](https://developer.toradex.com/hardware/verdin-som-family/carrier-boards/verdin-development-board/)
 - [Verdin Development Board](https://developer.toradex.com/hardware/verdin-som-family/carrier-boards/verdin-development-board/)
-
-
 
 ## Benchmark
 
@@ -84,6 +80,7 @@ The other configurations that can be used are:
 
 - DRM
 - Wayland
+- SDL
 
 Any of these buffering strategies can be used with multiple threads to render the frames.
 
@@ -112,8 +109,6 @@ Any of these buffering strategies can be used with multiple threads to render th
 ### Carrier board - Yavia
 
 The guide was done on Yavia. You can find the datasheet of the carrier board [here](https://docs.toradex.com/111745-yavia-v1.0-datasheet.pdf). 
-
-
 
 ## Getting started
 
@@ -147,8 +142,6 @@ The following steps come from [Tezi documentation](https://developer.toradex.com
 
 - Then wait for Tezi installer to display the flash options on the screen.
 
-
-
 ### Flash a new image with Tezi
 
 In this guide, we will use the default `Toradex Embedded Linux Reference Multimedia Image`.
@@ -156,8 +149,6 @@ In this guide, we will use the default `Toradex Embedded Linux Reference Multime
 You need a mouse plugged in the USB port to select and flash the image. Wait for the installation to be completed!
 
 If you want to create your own system and flash it, [here](https://developer.toradex.com/easy-installer/toradex-easy-installer/flashing-new-image-using-tezi/) is a detailed guide to use Tezi.
-
-
 
 ### Software setup
 
@@ -180,8 +171,6 @@ This guide was tested on Ubuntu 22.04 host.
 sudo apt install picocom nmap
 ```
 
-
-
 ### Run the default project
 
 Clone the repository: 
@@ -190,7 +179,24 @@ Clone the repository:
 git clone --recurse-submodules https://github.com/lvgl/lv_port_toradex_verdin_imx8m_mini.git
 ```
 
-Build the docker image and the lvgl benchmark application: 
+**IMPORTANT**: 
+
+- default application from lv_port_linux runs the widget demo. To run the benchmark demo, modify `lv_port_linux/main.c` : 
+
+  ```c
+  /*Create a Demo*/
+  // lv_demo_widgets();
+  // lv_demo_widgets_start_slideshow();
+  lv_demo_benchmark();
+  ```
+
+- The default lv_conf.h might not be the best configuration for the board. Feel free to replace the default lv_conf.h with one of the provided configurations in `lv_conf_example` folder.
+
+  ```bash
+  cp lv_conf_example/lv_conf_fb_2_threads.h lv_port_linux/lv_conf.h
+  ```
+
+Build the docker image and the lvgl benchmark application:
 
 ```bash
 cd lv_port_toradex_verdin_imx8m_mini
@@ -223,7 +229,7 @@ Run the executable on the target:
 - Then transfer the executable on the board: 
 
   ```bash
-  scp lvgl_port_linux/bin/lvgl-app root@<BOARD_IP>:/root
+  scp lv_port_linux/bin/lvglsim root@<BOARD_IP>:/root
   ```
 
 - Start the application
@@ -238,37 +244,23 @@ Run the executable on the target:
   systemctl stop weston.service 
   ######################################
   
-  ./lvgl-app
+  ./lvglsim
   ```
-
-
 
 ### Change configuration
 
-Some configurations are provided in the folder `lvgl_conf_example` .
+Some configurations are provided in the folder `lv_conf_example` .
 
-The default configuration used is lv_conf_fb_4_threads.h. To change the configuration, modify the `lvgl_port_linux/lv_conf.h` file with the desired configuration.
-
-Also modify the `lvgl_port_linux/CMakelists.txt` file option: 
-
-```cmake
-option(LV_USE_WAYLAND "Use the wayland client backend" OFF)
-option(LV_USE_SDL "Use the SDL backend" OFF)
-option(LV_USE_DRM "Use the libdrm backend" OFF)
-```
-
-Default fbdev backend. Only set 1 of these options to "ON" and ensure it's coherent with `lv_conf.h`. This can also be changed from the script `scripts/build_app.sh`.
-
-
+The default configuration used is lv_conf_fb_4_threads.h. To change the configuration, modify the `lv_port_linux/lv_conf.h` file with the desired configuration.
 
 ### Start with your own application
 
-The folder `lvgl_port_linux` is an example of an application using LVGL. 
+The folder `lv_port_linux` is an example of an application using LVGL. 
 
 LVGL is integrated as a submodule in the folder. To change the version of the library: 
 
 ```bash
-cd lvgl_port_linux
+cd lv_port_linux
 git checkout <branch_name_or_commit_hash>
 ```
 
@@ -282,8 +274,6 @@ The main steps to create your own application are:
 - Modify `CMakeLists.txt` provided file to ensure all the required files are compiled and linked
 - Use the docker scripts provided to build the application for ARM64 architecture.
 
-
-
 ## TroubleShooting
 
 ### Output folder permissions
@@ -291,7 +281,7 @@ The main steps to create your own application are:
 If there is any problem with the output folder generated permissions, modify the permissions: 
 
 ```bash
-sudo chown -R $(whoami):$(whoami) lvgl_port_linux/bin
+sudo chown -R $(whoami):$(whoami) lv_port_linux/bin
 ```
 
 ### Fbdev example runtime error
@@ -325,8 +315,6 @@ While running the application, if there is an error about `XDG_RUNTIME_DIR`, add
 export XDG_RUNTIME_DIR=/run/user/1000
 ```
 
-
-
 ### Changing configuration causes errors building the application
 
 CMake may have troubles with CMakeLists.txt changes with some variables setup. If there is any problem building, try to clean the build folder: 
@@ -334,8 +322,6 @@ CMake may have troubles with CMakeLists.txt changes with some variables setup. I
 ```bash
 rm -rf lv_port_linux/build-arm64
 ```
-
-
 
 ## Contribution and Support
 
