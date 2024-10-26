@@ -84,7 +84,11 @@ The other configurations that can be used are:
 
 Any of these buffering strategies can be used with multiple threads to render the frames.
 
+Check out Verdin i.MX8M Mini in action, running LVGL's benchmark demo:
 
+<a href="https://www.youtube.com/watch?v=eFaluS79Qnc">
+    <img src="https://github.com/user-attachments/assets/3fb2940c-e97e-45f7-800e-ce24b82fa58a" width="50%" alt="image">
+</a>
 
 ## Specification
 
