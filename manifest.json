@@ -14,7 +14,7 @@
         "specs": {
             "MPU": "4 64-bit Arm® Cortex®-A53 @1.8GHz",
             "MCU": "Arm® Cortex®-M4 MCU @400MHz",
-            "RAM": "2 GB 32-Bit data bus LPDDR4",
+            "RAM": "2 GB LPDDR4 32-Bit data bus with inline ECC (1500 MT/s)",
             "Flash": "16GB eMMC Flash",
             "GPU": "2D: Vivante GC320, 3D: Vivante GCNanoUltra"
         }
