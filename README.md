@@ -95,7 +95,7 @@ Check out Verdin i.MX8M Mini in action, running LVGL's benchmark demo:
 ### CPU and memory
 
 - **MCU**: Verdin i.MX8M Mini Quad 2GB IT ([datasheet](https://www.toradex.com/computer-on-modules/verdin-arm-family/nxp-imx-8m-mini-nano))
-  - 4 64-bit Arm® Cortex®-A53 @1.6GHz
+  - 4 64-bit Arm® Cortex®-A53 @1.8GHz
   - Arm® Cortex®-M4F MCU @400MHz
 
 
