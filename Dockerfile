@@ -17,6 +17,7 @@ RUN apt-get update && \
     ca-certificates \
     curl \
     git \
+    python3-venv \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
